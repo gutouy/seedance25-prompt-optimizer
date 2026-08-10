@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.0 - 2026-08-10
+
+- Added an original community logo and icon for the project.
+- Added a visual architecture diagram for the prompt-optimization pipeline.
+- Added a README usage demo graphic and a concrete input → output example.
+- Added full English documentation in `README.en.md` with language switching from the Chinese README.
+- Refreshed the Chinese README into a more visual GitHub landing page.
+
 ## 0.2.0 - 2026-08-10
 
 - Added Claude Code installation adapter using the canonical Agent Skills package.
