@@ -1,0 +1,6 @@
+interface:
+  display_name: "Seedance 2.5 提示词优化器"
+  short_description: "把简单视频创意扩写成可直接使用的 Seedance 2.5 成品提示词"
+  default_prompt: "请把我的简单视频提示词优化为详细、可执行、可直接用于 Seedance 2.5 的提示词；保留我的硬约束，并自动补充与视频相符的低风险细节。"
+policy:
+  allow_implicit_invocation: true
