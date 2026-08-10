@@ -1,19 +1,82 @@
-# Seedance 2.5 Prompt Optimizer
+<div align="center">
+  <img src="./assets/logo.svg" alt="Seedance 2.5 Prompt Optimizer" width="860" />
+</div>
 
-一个把**简单视频创意自动优化为详细 Seedance 2.5 提示词**的开源 Agent Prompt / Skill 项目。
+<p align="center">
+  <strong>把一句简单视频创意，自动优化成详细、可执行、可直接用于 Seedance 2.5 的成品提示词。</strong>
+</p>
 
-核心目标不是“把提示词写得更长”，而是把用户意图转换为**可看到、可听到、可连续执行、可稳定保持**的视频生成指令，并自动选择适合的任务结构。
+<p align="center">
+  简体中文 · <a href="./README.en.md">English</a>
+</p>
 
-目前提供：
+<p align="center">
+  <code>Codex</code> · <code>Claude Code</code> · <code>Cursor</code> · <code>Dify</code> · <code>Coze</code> · <code>Generic Agents</code>
+</p>
 
-- **Codex**：原生 Agent Skill
-- **Claude Code**：原生 Agent Skill
-- **Cursor**：Project Rule + Command
-- **Dify**：System Prompt Adapter
-- **Coze / Coze Studio**：Agent Prompt Adapter
-- **其他 Agent Builder**：通用 System Prompt / 结构化指令
+> **非官方社区项目。** 本项目与字节跳动、即梦、Seedance、OpenAI、Anthropic、Cursor、Dify、Coze 官方均无隶属或授权关系。
 
-> 本项目为非官方社区工具，与字节跳动、即梦、Seedance、OpenAI、Anthropic、Cursor、Dify、Coze 官方均无隶属或授权关系。
+## 为什么做这个项目？
+
+很多视频生成提示词的问题不是“写得不够长”，而是**动作不够可执行、镜头不够明确、情绪不可观察、素材职责不清、前后状态不连续**。
+
+Seedance 2.5 Prompt Optimizer 的目标是把用户的简单创意转换成：
+
+- **可看到**：主体、动作、状态与情绪都有画面表现；
+- **可听到**：对白、环境声、动作音效和音乐职责清楚；
+- **可连续执行**：长视频按阶段和结束状态组织；
+- **可稳定保持**：人物身份、数量、道具归属、空间方向和素材映射尽量稳定；
+- **不过度瞎编**：自动补充低风险细节，但不擅自创造品牌、关键对白、精确字幕、人物身份或产品参数。
+
+## 一眼看懂
+
+<div align="center">
+  <img src="./assets/usage-demo.svg" alt="Seedance 2.5 Prompt Optimizer usage demo" width="960" />
+</div>
+
+### 输入 → 输出示例
+
+**用户输入：**
+
+```text
+一只白色狐狸在雪山上回头看镜头，孤独、电影感。
+```
+
+**优化后的 Seedance 2.5 提示词：**
+
+```text
+一只白色狐狸独自站在开阔的雪山山脊上，身体朝向远处山谷，四肢稳定踩在薄雪中。它先保持背对镜头的姿态，耳朵轻微转动，随后缓慢把头转向镜头，动作克制而自然；呼出的白色雾气短暂出现在鼻尖前，细风吹动颈部与尾部毛发，松散雪粒沿山脊掠过。
+
+画面采用冷灰蓝色冬日电影质感，低饱和自然光，远处群山与天空保留大量负空间，强化孤独感。镜头从稍远的中远景开始，缓慢稳定推近狐狸，始终保持主体完整、不切镜；结尾停在狐狸回望镜头的状态。
+
+声音只保留持续的山风、轻微雪粒摩擦声和狐狸踩雪时极轻的压雪声，不添加对白。
+```
+
+这里新增的细节不是为了“堆词”，而是分别解决：动作过程、环境微动态、光线与材质、镜头执行、声音设计、情绪可观察性和结束状态连续性。
+
+## 工作架构
+
+<div align="center">
+  <img src="./assets/architecture.svg" alt="Seedance 2.5 Prompt Optimizer architecture" width="980" />
+</div>
+
+核心流程：
+
+```text
+简单创意 / 参考素材
+        ↓
+提取用户硬约束
+        ↓
+识别 Seedance 任务类型
+        ↓
+路由到对应任务模板
+        ↓
+自动补充低风险视频细节
+        ↓
+连续性 + 能力边界检查
+        ↓
+可直接复制的最终提示词
+```
 
 ## 平台支持
 
@@ -26,14 +89,13 @@
 | Dify | System Prompt | `platforms/dify/system-prompt.md` | ✅ Prompt 适配 |
 | Coze / Coze Studio | Agent Prompt | `platforms/coze/agent-prompt.md` | ✅ Prompt 适配 |
 | 其他 Agent | System Prompt | `platforms/generic/system-prompt.md` | ✅ 通用 |
-| 人工阅读/二次开发 | 结构化指令 | `instructions/seedance25-structured-instruction.zh-CN.md` | ✅ 完整版 |
+| 二次开发 | 完整结构化指令 | `instructions/seedance25-structured-instruction.zh-CN.md` | ✅ 完整版 |
 
-为什么不是所有平台都做成 `SKILL.md`：Codex 和 Claude Code 都支持文件系统 Agent Skills；Cursor 使用自己的 Rules / Commands；Dify 与 Coze 的稳定公共编排方式是 Prompt / Agent / Workflow 等资源。项目按**各平台真实支持的配置面**适配，而不是伪造一个看似统一、实际不能安装的格式。
+为什么不是所有平台都做成 `SKILL.md`：不同 Agent 平台的扩展机制不同。本项目按**各平台实际支持的配置面**适配，而不是伪造一个看似统一、实际不能安装的格式。
 
 ## 主要能力
 
 - 保留用户的主体、数量、剧情、风格、镜头、声音、参考素材职责和禁止项等硬约束。
-- 自动补充与视频相关的低风险细节，而不是单纯堆砌形容词。
 - 自动补全动作过程、结束状态、场景动态、光线与材质、镜头路径、环境声和连续性。
 - 将“紧张、孤独、温馨、压抑、释然”等抽象情绪转化为可观察的眼神、表情、呼吸、视线和肢体行为。
 - 自动识别任务类型，复杂任务使用对应模板。
@@ -58,43 +120,6 @@
 11. 一键成片
 12. 两段视频无缝转场
 
-## 仓库结构
-
-```text
-seedance25-prompt-optimizer/
-├── SKILL.md                         # Canonical Agent Skill（Codex / Claude Code）
-├── README.md
-├── LICENSE
-├── CHANGELOG.md
-├── agents/
-│   └── openai.yaml                  # Codex / OpenAI 可选元数据
-├── references/
-│   ├── core-rules.md
-│   ├── task-templates.md
-│   └── examples.md
-├── instructions/
-│   └── seedance25-structured-instruction.zh-CN.md
-├── platforms/
-│   ├── claude-code/
-│   │   └── README.md
-│   ├── cursor/
-│   │   ├── README.md
-│   │   └── .cursor/
-│   │       ├── rules/seedance25-prompt-optimizer.mdc
-│   │       └── commands/seedance25-optimize.md
-│   ├── dify/
-│   │   ├── README.md
-│   │   └── system-prompt.md
-│   ├── coze/
-│   │   ├── README.md
-│   │   └── agent-prompt.md
-│   └── generic/
-│       ├── README.md
-│       └── system-prompt.md
-└── docs/
-    └── platform-compatibility.md
-```
-
 ## 安装与使用
 
 ### Codex
@@ -112,8 +137,6 @@ git clone https://github.com/gutouy/seedance25-prompt-optimizer.git \
 ```text
 $seedance25-prompt-optimizer 一只白色狐狸站在雪山山脊上，回头看镜头，很孤独，电影感。
 ```
-
-Codex 也可以根据 `SKILL.md` 的 `description` 隐式选择该 Skill。
 
 ### Claude Code
 
@@ -135,15 +158,11 @@ git clone https://github.com/gutouy/seedance25-prompt-optimizer.git \
 
 ### Cursor
 
-把 [`platforms/cursor/.cursor`](./platforms/cursor/.cursor) 复制到你的项目根目录。
-
-然后可以自然语言触发，也可以显式引用：
+把 [`platforms/cursor/.cursor`](./platforms/cursor/.cursor) 复制到项目根目录，然后自然语言触发、显式引用规则，或使用可选命令：
 
 ```text
 @seedance25-prompt-optimizer 帮我优化这个 Seedance 2.5 视频提示词：……
 ```
-
-或者使用可选命令：
 
 ```text
 /seedance25-optimize
@@ -159,7 +178,7 @@ git clone https://github.com/gutouy/seedance25-prompt-optimizer.git \
 platforms/dify/system-prompt.md
 ```
 
-到 Dify App / Agent / LLM 节点的系统提示词中。该版本是自包含的，不要求模型再读取 `references/`。
+到 Dify App / Agent / LLM 节点的系统提示词中。该版本自包含，不要求模型额外读取 `references/`。
 
 更多说明：[`platforms/dify/README.md`](./platforms/dify/README.md)
 
@@ -183,30 +202,9 @@ platforms/coze/agent-prompt.md
 platforms/generic/system-prompt.md
 ```
 
-如果你希望人工阅读、修改或移植整个执行逻辑，使用：
+完整结构化执行指令：
 
-```text
-instructions/seedance25-structured-instruction.zh-CN.md
-```
-
-## 使用示例
-
-用户输入：
-
-```text
-一只白色狐狸在雪山上回头看镜头，孤独、电影感。
-```
-
-优化器不会只堆砌“8K、电影级、史诗感”等词语，而会补充真正影响生成的内容，例如：
-
-- 主体起始姿态和回头动作过程；
-- 风雪、毛发、积雪等与场景一致的微动态；
-- 光线方向、雪地反射和材质表现；
-- 服务于“孤独”情绪的景别、距离与镜头运动；
-- 风声、踩雪声等自然声音；
-- 结尾明确可见状态和主体一致性。
-
-如果用户明确要求“固定镜头、不要音乐”，优化器不会擅自改成运镜或添加背景音乐。
+[`instructions/seedance25-structured-instruction.zh-CN.md`](./instructions/seedance25-structured-instruction.zh-CN.md)
 
 ## 设计原则
 
@@ -226,25 +224,33 @@ instructions/seedance25-structured-instruction.zh-CN.md
 
 `SKILL.md`、结构化指令和各平台 Adapter 使用同一套行为规范。平台版本只改变安装方式、触发方式和上下文加载方式，不改变核心 Seedance 优化原则。
 
-## 结构化指令
+## 仓库结构
 
-完整、可复制的系统级结构化指令已公开：
-
-[`instructions/seedance25-structured-instruction.zh-CN.md`](./instructions/seedance25-structured-instruction.zh-CN.md)
-
-适合：
-
-- Dify / Coze 等 Agent Builder
-- 自定义 System Prompt
-- API Agent
-- 自研 LLM 应用
-- 二次开发新的平台适配器
-
-## 平台兼容性说明
-
-查看：[`docs/platform-compatibility.md`](./docs/platform-compatibility.md)
-
-该文档记录各平台采用何种适配方式，以及为什么某些平台使用原生 Skill，而另一些平台使用 System Prompt / Rule Adapter。
+```text
+seedance25-prompt-optimizer/
+├── assets/                           # Logo、架构图、使用演示图
+├── SKILL.md                          # Canonical Agent Skill（Codex / Claude Code）
+├── README.md                         # 中文说明
+├── README.en.md                      # English documentation
+├── LICENSE
+├── CHANGELOG.md
+├── agents/
+│   └── openai.yaml
+├── references/
+│   ├── core-rules.md
+│   ├── task-templates.md
+│   └── examples.md
+├── instructions/
+│   └── seedance25-structured-instruction.zh-CN.md
+├── platforms/
+│   ├── claude-code/
+│   ├── cursor/
+│   ├── dify/
+│   ├── coze/
+│   └── generic/
+└── docs/
+    └── platform-compatibility.md
+```
 
 ## 贡献
 
